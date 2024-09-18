@@ -43,6 +43,44 @@ def adduser():
     
     return user_schema.jsonify(new_user)
 
-# Ensure database is created
+#displaying User 
+@app.route("/user",methods=["GET"])
+def getuser():
+    alluser = User.query.all() #default funtion in SQL Database 
+    result = users_schema.dump(alluser)
+    return jsonify(result)
+
+
+#to Get User with Id 
+@app.route("/user/<id>",methods=["GET"])
+def getuserid(id):
+    user = User.query.get(id) #default funtion in SQL Database 
+    return user_schema.jsonify(user)
+
+
+# update User with Id 
+@app.route("/user/<id>",methods=["PUT"])
+def updateuser(id):
+    user = User.query.get(id) #default funtion in SQL Database
+    name = request.json['name']
+    contact = request.json['contact']
+    user.name = name
+    user.contact = contact 
+    db.session.commit()
+    return user_schema.jsonify(user)
+
+# update User with Id 
+@app.route("/user/<id>",methods=["DELETE"])
+def deluser(id):
+     user = User.query.get(id)
+     db.session.delete(user)
+     db.session.commit()
+     return  user_schema.jsonify(user) 
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
